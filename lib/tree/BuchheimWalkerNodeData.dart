@@ -11,4 +11,9 @@ class BuchheimWalkerNodeData {
   double change = 0.toDouble();
   List<Node> predecessorNodes = [];
   List<Node> successorNodes = [];
+
+  @override
+  String toString() {
+    return '[number: $number] [depth: $depth] [prelim: $prelim] [modifier: $modifier] [shift: $shift] [change: $change] [ancestor: $ancestor] [thread: $thread]';
+  }
 }

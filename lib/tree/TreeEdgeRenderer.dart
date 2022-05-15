@@ -11,7 +11,7 @@ class TreeEdgeRenderer extends EdgeRenderer {
   void render(Canvas canvas, Graph graph, Paint paint) {
     var levelSeparationHalf = configuration.levelSeparation / 2;
 
-    graph.nodes.forEach((node) {
+    graph.nodes.forEach((Node node) {
       var children = graph.successorsOf(node);
 
       children.forEach((child) {
