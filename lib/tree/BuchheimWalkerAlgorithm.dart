@@ -10,7 +10,6 @@ class BuchheimWalkerAlgorithm extends Algorithm {
 
   final _unCheckedNodes = <Node>{};
   final _rootNodes = <Node>[];
-  double _latestRightPosition = 0.0;
 
   bool isVertical() {
     var orientation = configuration.orientation;
@@ -33,7 +32,7 @@ class BuchheimWalkerAlgorithm extends Algorithm {
 
     var firstNode = getFirstNode(graph!);
     firstWalk(graph, firstNode, 0.0, 0, 0);
-    secondWalk(graph, firstNode, 0.0, 0.0);
+    secondWalk(graph, firstNode, 0.0);
     // run if not processed nodes
     while (true) {
       if (_unCheckedNodes.isEmpty) {
@@ -50,12 +49,7 @@ class BuchheimWalkerAlgorithm extends Algorithm {
               configuration.rootSeparation,
           0,
           0);
-      secondWalk(
-          graph,
-          firstNode,
-          //_latestRightPosition + configuration.rootSeparation,
-          0.0,
-          0.0);
+      secondWalk(graph, firstNode, 0.0);
     }
 
     checkUnconnectedNotes(graph);
@@ -140,8 +134,7 @@ class BuchheimWalkerAlgorithm extends Algorithm {
     }
   }
 
-  void secondWalk(
-      Graph graph, Node node, double startOffsetX, double modifier) {
+  void secondWalk(Graph graph, Node node, double modifier) {
     var nodeData = getNodeData(node)!;
     var depth = nodeData.depth;
     var vertical = isVertical();
@@ -151,17 +144,13 @@ class BuchheimWalkerAlgorithm extends Algorithm {
     }
 
     node.position = Offset(
-        (startOffsetX + nodeData.prelim + modifier),
+        (nodeData.prelim + modifier),
         (depth * (vertical ? minNodeHeight : minNodeWidth) +
                 depth * configuration.levelSeparation)
             .ceilToDouble());
 
-    if (node.position.dx > _latestRightPosition) {
-      _latestRightPosition = node.position.dx + node.size.width;
-    }
-
     graph.successorsOf(node).forEach((w) {
-      secondWalk(graph, w, startOffsetX, modifier + nodeData.modifier);
+      secondWalk(graph, w, modifier + nodeData.modifier);
     });
   }
 
@@ -585,7 +574,7 @@ class BuchheimWalkerAlgorithm extends Algorithm {
   void init(Graph? graph) {
     var firstNode = getFirstNode(graph!);
     firstWalk(graph, firstNode, 0, 0, 0);
-    secondWalk(graph, firstNode, 0, 0.0);
+    secondWalk(graph, firstNode, 0.0);
     checkUnconnectedNotes(graph);
     positionNodes(graph);
     // shiftCoordinates(graph, shiftX, shiftY);
@@ -596,7 +585,7 @@ class BuchheimWalkerAlgorithm extends Algorithm {
   void step(Graph? graph) {
     var firstNode = getFirstNode(graph!);
     firstWalk(graph, firstNode, 0, 0, 0);
-    secondWalk(graph, firstNode, 0, 0.0);
+    secondWalk(graph, firstNode, 0.0);
     checkUnconnectedNotes(graph);
     positionNodes(graph);
   }
